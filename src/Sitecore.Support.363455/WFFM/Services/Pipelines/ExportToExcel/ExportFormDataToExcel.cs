@@ -153,11 +153,14 @@ namespace Sitecore.Support.WFFM.Services.Pipelines.ExportToExcel
             {
                 if (exportRestriction.IndexOf(field.ID.ToString(), StringComparison.Ordinal) == -1)
                 {
-                    FieldData fieldData = entry.Fields.FirstOrDefault((FieldData f) => f.FieldId == field.ID.Guid);
                     #region FIX 363455
-                    for (int i = 1; i < entry.Fields.Count(); i++)
+
+                    var fieldDataList = entry.Fields.Where(x => x.FieldId == field.ID.Guid).ToList();
+                    FieldData fieldData = entry.Fields.FirstOrDefault((FieldData f) => f.FieldId == field.ID.Guid);
+
+                    for (int i = 1; i < fieldDataList.Count(); i++)
                     {
-                        var fieldDataInner = entry.Fields.ToList()[i];
+                        FieldData fieldDataInner = fieldDataList[i];
                         if (fieldDataInner.FieldId == field.ID.Guid)
                         {
                             if (fieldData != null && fieldData.Value != null)
